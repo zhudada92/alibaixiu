@@ -1,5 +1,12 @@
+<script src="/login/status"></script>
+<script>
+  if (!isLogin) {
+    location.href = 'login.html';
+  }
+</script>
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="utf-8">
   <title>Settings &laquo; Admin</title>
@@ -7,6 +14,7 @@
   <link rel="stylesheet" href="../assets/vendors/font-awesome/css/font-awesome.css">
   <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
+
 <body>
 
   <div class="main">
@@ -25,31 +33,32 @@
       <!-- <div class="alert alert-danger">
         <strong>错误！</strong>发生XXX错误
       </div> -->
-      <form class="form-horizontal">
+      <form class="form-horizontal" id="settingForm">
         <div class="form-group">
           <label for="site_logo" class="col-sm-2 control-label">网站图标</label>
           <div class="col-sm-6">
             <label class="form-image">
-              <input type="file">
-              <img src="../assets/img/logo.png">
+              <input type="file" id="myFile">
+              <img src="../assets/img/logo.png" id="preview">
               <i class="mask fa fa-upload"></i>
+              <input type="hidden" name="logo" id="hiddenIpt">
             </label>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label">站点名称</label>
           <div class="col-sm-6">
-            <input class="form-control" type="text" placeholder="站点名称">
+            <input class="form-control" name="title" type="text" placeholder="站点名称">
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label">评论</label>
           <div class="col-sm-6">
             <div class="checkbox">
-              <label><input type="checkbox" checked>开启评论功能</label>
+              <label><input type="checkbox" name="comment" checked value="true">开启评论功能</label>
             </div>
             <div class="checkbox">
-              <label><input type="checkbox" checked>评论必须经人工批准</label>
+              <label><input type="checkbox" name="review" checked value="true">评论必须经人工批准</label>
             </div>
           </div>
         </div>
@@ -102,6 +111,54 @@
   <script src="../assets/vendors/jquery/jquery.js"></script>
   <script src="../assets/vendors/bootstrap/js/bootstrap.js"></script>
   <script src="../assets/js/common.js"></script>
+  <script>
+    $('#myFile').on('change', function () {
+      var formData = new FormData();
+      formData.append('avatar', this.files[0])
+      $.ajax({
+        type: 'post',//get或post
+        url: '/upload',//请求的地址
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (result) {//成功的回调函数
+          console.log(result)
+          $('#preview').attr('src', result[0].avatar);
+          $('#hiddenIpt').val(result[0].avatar)
+        }
+      })
+    })
 
+    $('#settingForm').on('submit', function () {
+      var form = $(this).serialize();
+      $.ajax({
+        type: 'post',//get或post
+        url: '/settings',//请求的地址
+        data: form,
+        success: function (result) {//成功的回调函数
+          console.log(result)
+          alert('设置成功')
+        }
+      })
+      return false;
+    })
+
+    $.ajax({
+      type:'get',//get或post
+      url:'/settings',//请求的地址
+      success:function(result){//成功的回调函数
+        console.log(result)
+        if(result) {
+          $('#hiddenIpt').val(result.val);
+          $('#preview').attr('src',result.logo);
+          $('input[name="title"]').val(result.title);
+          $('input[name="comment"]').prop('checked',result.comment);
+          $('input[name="review"]').prop('checked',result.review);
+
+        }
+      }
+    })
+  </script>
 </body>
+
 </html>
