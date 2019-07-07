@@ -2,7 +2,7 @@ $.ajax({
   type: 'get',//get或post
   url: '/comments',//请求的地址
   success: function (result) {//成功的回调函数
-    console.log(result)
+    // console.log(result)
     var html = template('commentsTpl', result)
     $('#commentsBox').html(html)
   }

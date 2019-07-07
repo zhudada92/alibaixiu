@@ -43,22 +43,27 @@
       }
 
       $.ajax({
-          type: 'post',
-          url: '/login',
-          data: {
-            email,
-            password
-          },
-          success: function(response) {
-            //登录成功 跳转到后台首页
+        type: 'post',
+        url: '/login',
+        data: {
+          email,
+          password
+        },
+        success: function (response) {
+          //登录成功 跳转到后台首页
+          if (response.role == 'admin') {
             location.href = 'index.html';
-          },
-          error: function() {
-            //登录失败
-            alert('用户名或密码错误');
+          } else {
+            location.href = '/index.html';
+
           }
-        })
+        },
+        error: function () {
+          //登录失败
+          alert('用户名或密码错误');
+        }
       })
+    })
   </script>
 </body>
 

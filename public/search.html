@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>阿里百秀-发现生活，发现美!</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/vendors/font-awesome/css/font-awesome.css">
-  <link rel="stylesheet" href="assets/vendors/nprogress/nprogress.css">
 </head>
-
 <body>
   <div class="wrapper">
     <div class="topnav">
       <ul>
         <li><a href="javascript:;"><i class="fa fa-glass"></i>奇趣事</a></li>
         <li><a href="javascript:;"><i class="fa fa-phone"></i>潮科技</a></li>
-        <li><a href="javascript:;"><i class="fa fa-fire"></i>会生活</a></li>
+        <li><a href="list.html"><i class="fa fa-fire"></i>会生活</a></li>
         <li><a href="javascript:;"><i class="fa fa-gift"></i>美奇迹</a></li>
       </ul>
     </div>
@@ -180,36 +177,9 @@
       </div>
     </div>
     <div class="content">
-      <div class="article">
-
-      </div>
-      <style type="text/css">
-        .comment {
-          margin-bottom: 20px;
-        }
-
-        .comment textarea {
-          box-sizing: border-box;
-          padding: 10px;
-          width: 100%;
-          height: 80px;
-          display: block;
-        }
-
-        .comment input {
-          width: 100px;
-          height: 30px;
-          margin-top: 10px;
-        }
-      </style>
-      <div class="comment">
-
-      </div>
-      <div class="panel hots">
-        <h3>热门推荐</h3>
-        <ul id="recommendBox">
-
-        </ul>
+      <div class="panel new">
+        <h3 id="categoryTitile"></h3>
+        <div id="listBox"></div>
       </div>
     </div>
     <div class="footer">
@@ -217,33 +187,35 @@
     </div>
   </div>
   <script src="assets/vendors/jquery/jquery.js"></script>
-  <script src="assets/vendors/nprogress/nprogress.js"></script>
-  <script src="./assets/vendors/art-template/template-web.js"></script>
-  <script src="./assets/js/recommend.js"></script>
-  <script src="./assets/js/public.js"></script>
-  <script src="./assets/js/detail.js"></script>
-  <script src="/login/status"></script>
-  <script type="text/html" id="detailTpl">
-    <div class="breadcrumb">
-        <dl>
-          <dt>当前位置：</dt>
-          <dd><a href="javascript:;">{{category.title}}</a></dd>
-          <dd>{{title}}</dd>
-        </dl>
+  <script src="assets/vendors/art-template/template-web.js"></script>
+  <script src="assets/js/public.js"></script>
+  <script src="assets/js/search.js"></script>
+  <script type="text/html" id="searchTpl">
+    {{each data}}
+    <div class="entry">
+      <div class="head">
+        <a href="detail.html?id={{$value._id}}">{{$value.title}}</a>
       </div>
-      <h2 class="title">
-        <a href="javascript:;">{{title}}</a>
-      </h2>
-      <div class="meta">
-        <span>{{author.nickName}} 发布于 {{createAt.split('t')[0]}}</span>
-        <span>分类: <a href="javascript:;">奇趣事</a></span>
-        <span>阅读: ({{meta.views}})</span>
-        <span>评论: ({{meta.comments}})</span>
-        <a href="javascript:;" id="like">赞 👍 </a>
+      <div class="main">
+        <p class="info">{{$value.author.nickName}} 发表于 {{$value.createAt.split('T')[0]}}</p>
+        <p class="brief">{{$value.content.substr(0,90)}}</p>
+        <p class="extra">
+          <span class="reading">阅读({{$value.meta.views}})</span>
+          <span class="comment">评论({{$value.meta.comments}})</span>
+          <a href="javascript:;" class="like">
+            <i class="fa fa-thumbs-up"></i>
+            <span>赞({{$value.meta.likes}})</span>
+          </a>
+          <a href="javascript:;" class="tags">
+            分类：<span>{{$value.category.title}}</span>
+          </a>
+        </p>
+        <a href="detail.html?id={{$value._id}}" class="thumb">
+          <img src="{{$value.thumbnail}}" alt="">
+        </a>
       </div>
-      <div style="color:black"><h2>{{content}}</h2></div>
+    </div>
+    {{/each}}
   </script>
-
 </body>
-
 </html>
